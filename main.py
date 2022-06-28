@@ -1,88 +1,49 @@
-import re
+from textwrap import indent
+import json
 
-# difining Different data types
-types={'integer' : "<class 'int'>",
-        'string' : "<class 'str'>", 
-        'boolean' : "<class 'bool'>", 
-        'list' : "<class 'bool'>",
-        'dictionary': "<class 'dict'>",
-        'tuple': "<class 'tuple'>",
-        }
+header=[]
+parsed_data=[]
 
-errors={}
+with open("sample.txt" ,'r',) as f1:
+    lines = f1.readlines()
 
-def validator(dict={}, validation_rules={}):
-    global types, errors
-    for var in validation_rules:
-        err={}
-        for v in validation_rules[var]:
-            if (((v == 'type') and (str(type(dict[var])) != types[validation_rules[var][v]]))):
-                err[v] = "Type doesn't matched (Validation: {}, obtained: {})".format(types[validation_rules[var][v]], type(dict[var]))
+line_no=1
+temp =""
+temp2=""
+temp3=[] 
 
-            elif(v == 'minLength' and (len(dict[var]) < validation_rules[var][v])):
-                err[v] = "Length less than minimum (minimum Length: {}, obtained length: {})".format(validation_rules[var][v], len(dict[var]))
-
-            elif(v == 'maxLength' and (len(dict[var]) > validation_rules[var][v])):
-                err[v] = "Length exceed than maximum (maximum Length: {}, obtained length: {})".format(validation_rules[var][v], len(dict[var]))
-
-            elif(v == 'required' and ((validation_rules[var][v] == True) and not(dict[var]))):
-                err[v] = "Required Field is set to {} for {}.".format(validation_rules[var][v], v)
-                  
-            elif (v == 'minValue' and (dict[var] < validation_rules[var][v])):
-                err[v] = "Minimum Value error (minimum value: {}, obtained value: {})".format(validation_rules[var][v], dict[var])
-
-            elif(v == 'maxValue' and (dict[var] > validation_rules[var][v])):
-                err[v] = "Maximum value error (Maximum value: {}, obtained value: {})".format(validation_rules[var][v], dict[var])
-
-            elif(v == 'regex' and (not re.fullmatch(re.compile(validation_rules[var][v]), dict[var]))):
-                err[v] = "Regex matching error occurs (Set patterns: {} obtained value: {})".format(validation_rules[var][v], dict[var])
-
-            elif(v == 'enumerate' and (dict[var] not in validation_rules[var][v])):
-                err[v] = "Out of defined value (Set values: {}, obtained value: {})".format(validation_rules[var][v], dict[var])
-
-        if(err):
-            errors[var]=err
-    
-    if(errors): # If any Error
-        return False
+for line in lines:
+    if(line_no <= 5):
+        temp = temp + line.strip()
     else:
-        return True
+        for row in line.split("\n"):
+            for item in row.split(" "):
+                if(item != "" and not(item.isnumeric()) and not(item.isupper())):
+                    temp2 = temp2 +" "+item
+                elif(item != "" and not(item.isnumeric()) and (item.isupper())):
+                    temp3.append(temp2)
+                    temp3.append(item)
+                    temp2=""
+                elif (item != "" and (item.isnumeric()) and not(item.isupper())):
+                    temp3.append(item)
+    line_no+=1
+
+for col in  temp.split(' '):
+    if(col != "" and col not in header):
+        header.append(col)
 
 
+parsed_data=[]
+j=0
+while(j<len(temp3)-1):
+    d={}
+    for i in range(0, len(header)):
+        d[header[i]]=temp3[i+j]
+    parsed_data.append(d)
+    j+=3
 
-validation_rules={
-    'name':{
-        'type': 'string',
-        'minLength':10,
-        'maxLength': 500
-    },
-    'address':{
-        'type': 'string',
-        'minLength': 10,
-        'maxLength':50,
-        'required':True,
-    },
-    'age':{
-        'type': 'integer',
-        'minValue': 5,
-        'maxValue':30,
-    },
-    'email':{
-        "regex" : "^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\\.[a-zA-Z0-9-.]+$",
-    },
-    'day':{
-        'enumerate':['sunday', 'monday', 'tuesday', 'thrusday', 'friday', 'saturday']
-    },
-    'birthYear':{
-        'maxValue':2022,
-    }
-}
-
-
-dict ={'name': 'Bhuban Yadav', 'age':24, 'day':'monday' ,'birthYear':2023, 'birthMonth': 4, 'birthDay': 18, 'address': 'Dhapakhel-23, Lalitpur Nepal','email':'yadav.bhuban.by@gmail.com'}
+print(json.dumps(parsed_data, indent=2))
 
 
 
 
-print(validator(dict, validation_rules))
-print(errors if(errors) else "")
