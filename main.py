@@ -15,6 +15,11 @@ temp3=[]
 for line in lines:
     if(line_no <= 5):
         temp = temp + line.strip()
+
+    elif(line_no == 6):
+        for col in  temp.split(' '):
+            if(col != "" and col not in header):
+                header.append(col)
     else:
         for row in line.split("\n"):
             for item in row.split(" "):
@@ -28,18 +33,14 @@ for line in lines:
                     temp3.append(item)
     line_no+=1
 
-for col in  temp.split(' '):
-    if(col != "" and col not in header):
-        header.append(col)
-
 
 parsed_data=[]
 j=0
 while(j<len(temp3)-1):
-    d={}
+    dict={}
     for i in range(0, len(header)):
-        d[header[i]]=temp3[i+j]
-    parsed_data.append(d)
+        dict[header[i]]=temp3[i+j]
+    parsed_data.append(dict)
     j+=3
 
 print(json.dumps(parsed_data, indent=2))
