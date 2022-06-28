@@ -17,7 +17,7 @@ def validator(dict={}, validation_rules={}):
         err={}
         for v in validation_rules[var]:
             if (((v == 'type') and (str(type(dict[var])) != types[validation_rules[var][v]]))):
-                err[v] = "Type Doesnot Matched (Validation: {}, obtained: {})".format(types[validation_rules[var][v]], type(dict[var]))
+                err[v] = "Type doesn't matched (Validation: {}, obtained: {})".format(types[validation_rules[var][v]], type(dict[var]))
 
             elif(v == 'minLength' and (len(dict[var]) < validation_rules[var][v])):
                 err[v] = "Length less than minimum (minimum Length: {}, obtained length: {})".format(validation_rules[var][v], len(dict[var]))
