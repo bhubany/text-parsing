@@ -44,7 +44,6 @@ while(j<len(temp3)-1):
     j+=3
 
 
-# print(json.dumps(parsed_data ,indent=2))
 with open("output.json", "w") as file:
     json.dump(parsed_data, file ,indent=2)
 
