@@ -32,7 +32,7 @@ def validator(dict={}, validation_rules={}):
                 err[v] = "Minimum Value error (minimum value: {}, obtained value: {})".format(validation_rules[var][v], dict[var])
 
             elif(v == 'maxValue' and (dict[var] > validation_rules[var][v])):
-                err[v] = "Maximum value error (Maximum Length: {}, obtained length: {})".format(validation_rules[var][v], dict[var])
+                err[v] = "Maximum value error (Maximum value: {}, obtained value: {})".format(validation_rules[var][v], dict[var])
 
             elif(v == 'regex' and (not re.fullmatch(re.compile(validation_rules[var][v]), dict[var]))):
                 err[v] = "Regex matching error occurs (Set patterns: {} obtained value: {})".format(validation_rules[var][v], dict[var])
@@ -72,14 +72,17 @@ validation_rules={
     },
     'day':{
         'enumerate':['sunday', 'monday', 'tuesday', 'thrusday', 'friday', 'saturday']
+    },
+    'birthYear':{
+        'maxValue':2022,
     }
 }
 
 
-dict ={'name': 'Bhuban Yadav', 'age':24, 'day':'monday' ,'birthYear':1998, 'birthMonth': 4, 'birthDay': 18, 'address': 'Dhapakhel-23, Lalitpur Nepal','email':'yadav.bhuban.by@gmail.com'}
+dict ={'name': 'Bhuban Yadav', 'age':24, 'day':'monday' ,'birthYear':2023, 'birthMonth': 4, 'birthDay': 18, 'address': 'Dhapakhel-23, Lalitpur Nepal','email':'yadav.bhuban.by@gmail.com'}
 
 
 
 
 print(validator(dict, validation_rules))
-print("Errors: {}".format(errors))
+print(errors if(errors) else "")
