@@ -1,5 +1,15 @@
 [
   {
+    "State": " Alabama",
+    "PostalAbbr.": "AL",
+    "FIPSCode": "01"
+  },
+  {
+    "State": " Nebraska",
+    "PostalAbbr.": "NE",
+    "FIPSCode": "31"
+  },
+  {
     "State": " Alaska",
     "PostalAbbr.": "AK",
     "FIPSCode": "02"

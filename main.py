@@ -2,52 +2,40 @@ from textwrap import indent
 import json
 
 header=[]
-parsed_data=[]
+parsed_data = []
+temp =""
+temp2 = ""
+temp3 = [] 
 
 with open("sample.txt" ,'r',) as f1:
-    lines = f1.readlines()
+    line = f1.read().splitlines()
+    for i in range(0,5):
+        temp = temp + line[i].strip()
+    
+    for i in  range(0, len(temp.split(' '))):
+        if(temp.split(' ')[i] != "" and temp.split(' ')[i] not in temp3):
+            header.append(temp.split(' ')[i])
 
-line_no=1
-temp =""
-temp2=""
-temp3=[] 
-
-for line in lines:
-    if(line_no <= 5):
-        temp = temp + line.strip()
-
-    elif(line_no == 6):
-        for col in  temp.split(' '):
-            if(col != "" and col not in header):
-                header.append(col)
-    else:
-        for row in line.split("\n"):
-            for item in row.split(" "):
-                if(item != "" and not(item.isnumeric()) and not(item.isupper())):
-                    temp2 = temp2 +" "+item
-                elif(item != "" and not(item.isnumeric()) and (item.isupper())):
-                    temp3.append(temp2)
-                    temp3.append(item)
-                    temp2=""
-                elif (item != "" and (item.isnumeric()) and not(item.isupper())):
-                    temp3.append(item)
-    line_no+=1
+    for j in range(5, len(line)):
+        for item in line[j].split(" "):
+            if(item != "" and not(item.isnumeric()) and not(item.isupper())):
+                temp2 = temp2 +" "+item
+            elif(item != "" and not(item.isnumeric()) and (item.isupper())):
+                temp3.append(temp2)
+                temp3.append(item)
+                temp2=""
+            elif (item != "" and (item.isnumeric()) and not(item.isupper())):
+                temp3.append(item)
 
 
-parsed_data=[]
-j=0
-while(j<len(temp3)-1):
+k = 0
+while(k<len(temp3)):
     dict={}
-    for i in range(0, len(header)):
-        dict[header[i]]=temp3[i+j]
+    dict[header[k%3]] = temp3[k]
+    dict[header[k%3 +1]] = temp3[k +1]
+    dict[header[k%3 +2]] = temp3[k +2]
     parsed_data.append(dict)
-    j+=3
-
+    k+=3
 
 with open("output.json", "w") as file:
     json.dump(parsed_data, file ,indent=2)
-
-
-
-
-
